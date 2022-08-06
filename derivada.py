@@ -21,6 +21,8 @@ def separar_caracteres(expresion_regular):
 
 def v(expresion_regular):
 
+    obtener_alfabeto(expresion_regular)
+
     # Regla 1
     if expresion_regular == 'ε':
         return 'ε'
@@ -54,8 +56,6 @@ def v(expresion_regular):
 
 def derivar(expresion_regular, caracter):
 
-    obtener_alfabeto(expresion_regular)
-    
     # Regla 1
     if expresion_regular == 'ε' or expresion_regular == '∅':
         return '∅'
