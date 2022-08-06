@@ -1,4 +1,4 @@
-# TODO: Solucionar bug del asterisco 
+# TODO: Solucionar bug del asterisco en expresiones largas
 
 alfabeto = []
 
@@ -19,9 +19,8 @@ def separar_caracteres(expresion_regular):
             temp.append(temp_2)
     return temp
 
-def v(expresion_regular):
+def v(expresion_regular, parentesis=False):
 
-    obtener_alfabeto(expresion_regular)
 
     # Regla 1
     if expresion_regular == 'ε':
@@ -43,7 +42,7 @@ def v(expresion_regular):
 
     # Regla 5
     if len(expresion_regular) > 1:
-        if len(expresion_regular) == 2 and expresion_regular.endswith('*'):
+        if len(expresion_regular) == 2 and expresion_regular.endswith('*') or parentesis:
             pass
         else:
             temp = separar_caracteres(expresion_regular)
@@ -51,10 +50,12 @@ def v(expresion_regular):
             return '∅' if '∅' in temp_2 else 'ε'
 
     # Regla 6
-    if '*' in expresion_regular:
+    if '*' in expresion_regular or parentesis:
         return 'ε'
 
-def derivar(expresion_regular, caracter):
+def derivar(expresion_regular, caracter, parentesis=False):
+
+    expresion_regular = expresion_regular.replace(' ', '')
 
     # Regla 1
     if expresion_regular == 'ε' or expresion_regular == '∅':
@@ -71,10 +72,46 @@ def derivar(expresion_regular, caracter):
     # Regla 4
     if '+' in expresion_regular:
         temp = expresion_regular.split('+')
-        temp_2 = list(map(derivar, temp, caracter))
-        return 'ε' if 'ε' in temp_2 else '∅'
+        temp_2 = []
+
+        for x in temp:
+            temp_3 = derivar(x, caracter)
+            temp_2.append(temp_3)
+
+        if parentesis:
+            return '+'.join(temp_2) + '(' + expresion_regular + ')*'
+        else:
+            return '+'.join(temp_2) 
 
     # Regla 5
-    if len(expresion_regular) > 1:
-        pass
+    if len(expresion_regular) > 1 and not parentesis:
+        if len(expresion_regular) == 2 and expresion_regular.endswith('*'):
+            pass
+        elif expresion_regular.startswith(caracter):
+            return expresion_regular[1:]
+        else:
+            return '∅'
+
+    # Regla 6
+    if '*' in expresion_regular or parentesis:
+
+        if parentesis:
+            temp = derivar(expresion_regular, caracter)
+            if temp == '∅':
+                return '(' + expresion_regular + ')*'
+            else:
+                return temp + '(' + expresion_regular + ')*'
+
+        elif len(expresion_regular) == 2:
+            if expresion_regular.startswith(caracter):
+                return expresion_regular
+            else:
+                return '∅'
+            
+
+
+def leer_expresion(expresion_regular):
+
+    obtener_alfabeto(expresion_regular)
+
 

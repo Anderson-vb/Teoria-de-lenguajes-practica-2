@@ -26,4 +26,7 @@ class test_v(unittest.TestCase):
     def test_7(self):
         self.assertEqual(v('a+b*'), 'ε')
 
+    def test_8(self):
+        self.assertEqual(v('abc', True), 'ε')
+
 unittest.main()
