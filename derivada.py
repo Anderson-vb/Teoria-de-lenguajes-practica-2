@@ -1,4 +1,3 @@
-# TODO: Solucionar bug del asterisco en expresiones largas
 
 alfabeto = []
 
@@ -55,7 +54,6 @@ def v(expresion_regular, parentesis=False):
 
 def derivar(expresion_regular, caracter, parentesis=False):
 
-    expresion_regular = expresion_regular.replace(' ', '')
 
     # Regla 1
     if expresion_regular == 'ε' or expresion_regular == '∅':
@@ -112,6 +110,51 @@ def derivar(expresion_regular, caracter, parentesis=False):
 
 def leer_expresion(expresion_regular):
 
+    expresion_regular = expresion_regular.replace(' ', '')
     obtener_alfabeto(expresion_regular)
+
+    valores = []
+    operadores = []
+
+    # TODO: BUG de la variable valores_seguidos, no cambia despues de pasar a False
+
+    valores_seguidos = True
+
+    for char in expresion_regular:
+        print(valores_seguidos) 
+        if char != '+' and char != '*' and char != '(' and char != ')':
+            if valores_seguidos:
+                if len(valores) >= 1:
+                    temp = valores.pop()
+                    temp = temp + char
+                    valores.append(temp)
+            else:
+                valores.append(char)
+                valore_seguidos = True
+        
+        elif char == '+' or char == '(' or char == ')':
+            operadores.append(char)
+            valores_seguidos = False
+
+        elif char == '*':
+            if operadores[-1] == ')':
+                temp = operadores.pop()
+                temp = temp + '*'
+                operadores.append(temp)
+            else:
+                temp = valores.pop()
+                temp = temp + '*'
+                valores.append(temp)
+
+
+    print(valores)
+    print(operadores)
+
+leer_expresion('a')
+leer_expresion('ab')
+leer_expresion('a+b')
+leer_expresion('a+b*')
+leer_expresion('(a+b*)')
+leer_expresion('(a+b*)*+ab+(ab*+c)')
 
 
